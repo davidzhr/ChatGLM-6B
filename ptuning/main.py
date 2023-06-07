@@ -25,12 +25,25 @@ import json
 
 import numpy as np
 from datasets import load_dataset
-import jieba 
+# 导入中文分词词库， 将中文文本分割成单个词语或汉字
+import jieba
+# 用来进行文本相似度评估的
 from rouge_chinese import Rouge
+#从NLTK库中导入了两个模块：sentence_bleu和SmoothingFunction，用于计算句子的BLEU分数。
+#BLEU（Bilingual Evaluation Understudy）是一种评估机器翻译质量的指标，它通过比较翻译结果与参考翻译之间的相似性来进行评估。BLEU分数越高，翻译质量越好。
+#sentence_bleu函数用于计算句子的BLEU分数，其参数包括一个参考句子列表和一个候选句子。SmoothingFunction模块则提供了几种平滑函数来对BLEU分数进行平滑处理。
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 import torch
 
 import transformers
+
+#- `AutoConfig`：用于自动配置模型的类。
+#- `AutoModel`：用于自动加载预训练模型的类。
+#- `AutoTokenizer`：用于自动加载预训练分词器的类。
+#- `DataCollatorForSeq2Seq`：用于序列到序列模型中的数据集处理和批次生成的类。
+#- `HfArgumentParser`：帮助解析命令行参数的类，通常用于训练脚本。
+#- `Seq2SeqTrainingArguments`：用于序列到序列模型中的训练参数的类。
+#- `set_seed`：设置随机数种子的函数。
 from transformers import (
     AutoConfig,
     AutoModel,
@@ -45,6 +58,7 @@ from trainer_seq2seq import Seq2SeqTrainer
 from arguments import ModelArguments, DataTrainingArguments
 
 logger = logging.getLogger(__name__)
+
 
 def main():
 
@@ -67,11 +81,17 @@ def main():
         # The default of training_args.log_level is passive, so we set log level at info here to have that default.
         transformers.utils.logging.set_verbosity_info()
 
+    # 设置日志级别
     log_level = training_args.get_process_log_level()
     logger.setLevel(log_level)
     # datasets.utils.logging.set_verbosity(log_level)
     transformers.utils.logging.set_verbosity(log_level)
+
+    # enable_default_handler()
+    # 函数启用默认的日志处理程序，这个处理程序可以将日志输出到控制台，并按照一定的格式进行显示。
     transformers.utils.logging.enable_default_handler()
+    # enable_explicit_format()
+    # 函数启用显示显式格式的日志记录，即在日志中显示详细的信息，如时间戳、线程ID、日志级别等，以方便用户对日志进行分析和调试。
     transformers.utils.logging.enable_explicit_format()
 
     # Log on each process the small summary:
